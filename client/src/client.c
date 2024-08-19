@@ -108,6 +108,14 @@ void paquete(int conexion)
 
 	// Leemos y esta vez agregamos las lineas al paquete
 
+	do {
+		leido = readline (">") ;
+		agregar_a_paquete(paquete, leido, strlen(leido) + 1);
+
+	}while ( strcmp(leido,""));
+	free(leido);
+	enviar_paquete (paquete,conexion);
+	eliminar_paquete(paquete);
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
 	
@@ -117,4 +125,7 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
 	/* Y por ultimo, hay que liberar lo que utilizamos (conexion, log y config) 
 	  con las funciones de las commons y del TP mencionadas en el enunciado */
+	log_destroy(logger);
+	config_destroy(config);
+	liberar_conexion(conexion);
 }
