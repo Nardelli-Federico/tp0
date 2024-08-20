@@ -1,5 +1,6 @@
 #include "client.h"
 
+
 int main(void)
 {
 	/*---------------------------------------------------PARTE 2-------------------------------------------------------------*/
@@ -19,6 +20,9 @@ int main(void)
 	// Usando el logger creado previamente
 	// Escribi: "Hola! Soy un log"
 
+	logger = log_create ( " tp0.log " , " Hola soy un log en log_create " , 1 , LOG_LEVEL_INFO ) ;
+
+	leer_consola (logger ) ;
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
@@ -29,6 +33,11 @@ int main(void)
 
 	// Loggeamos el valor de config
 
+	config = config_create ( " cliente.config " ) ;
+
+	valor = config_get_string_value ( config , "CLAVE" ) ;
+
+	log_info (logger, valor);
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
@@ -42,7 +51,7 @@ int main(void)
 	conexion = crear_conexion(ip, puerto);
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
-
+	enviar_mensaje ( valor , conexion ) ;
 	// Armamos y enviamos el paquete
 	paquete(conexion);
 
@@ -50,6 +59,9 @@ int main(void)
 
 	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
 	// Proximamente
+
+	log_destroy ( logger ) ;
+	config_destroy ( config ) ;
 }
 
 t_log* iniciar_logger(void)
@@ -70,12 +82,20 @@ void leer_consola(t_log* logger)
 {
 	char* leido;
 
-	// La primera te la dejo de yapa
-	leido = readline("> ");
 
 	// El resto, las vamos leyendo y logueando hasta recibir un string vacío
 
+    do {
+		leido = readline("> ");      // Lee la entrada del usuario
 
+        if (strcmp((leido), "") ) {
+            log_info(logger, leido);  // Loguea si no está vacío
+        }
+        
+    } while ( strcmp(leido, "") );
+
+	free(leido);  // Libera la memoria asignada por readline
+	
 	// ¡No te olvides de liberar las lineas antes de regresar!
 
 }
